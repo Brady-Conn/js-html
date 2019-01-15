@@ -38,8 +38,11 @@ function getAnswer(e){
     let firstCharCheck = /^\*|^\+|^\/|^\-/;
     let numberCheck = /\d/;
     let opcheck = /\*|\//;
+    console.log(input.match(syntaxCheck))
     if(input.match(syntaxCheck) !== null || input.match(lastCharCheck) !== null){
         answer.textContent = "Invalid syntax";
+        console.log("syntax error")
+        return
     }
     let parse = [];
     let length = input.length;
