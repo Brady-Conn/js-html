@@ -18,7 +18,6 @@ let display = document.getElementById("display");
 let operation = document.getElementById("operation")
 let answer = document.getElementById("answer")
 let input = "";
-let parse = [];
 
 function addToDisplay(e){
     let selection = e.target;
@@ -45,26 +44,28 @@ function clearAll(e){
     subtract.onclick = addToDisplay;
     multiply.onclick = addToDisplay;
     divide.onclick = addToDisplay;
-    input = operation.textContent;
 
 
 function calculate(e){
+    let parse = [];
+    input = operation.textContent;
     let syntaxCheck = /\*(?=\d)|\/(?=\d)|\+(?=\d)|\-(?=\d)|\-{2}/;
     let lastCharCheck = /\*$|\+$|\/$|\-$/;
     let firstCharCheck = /^\*|^\+|^\/|^\-/;
     let numberCheck = /\d/;
     let total = 0;
-    console.log("here")
+    let operatorCheck = ["+", "-", "/", "*"];
     if(syntaxCheck.test(input) === 0 || input.match(lastCharCheck) !== null){
         answer.textContent = "Invalid syntax";
         return;
     }
 
+
     for(let i = 0; i < input.length; i++){
-        if(input[i].match(numberCheck) !== null && (i === 0 || (input[i-1] === "+" || "-" || "*" || "/"))){
-          parse.push(input[i]);  
+        if(input[i].match(numberCheck) !== null && (i === 0 || operatorCheck.includes(input[i-1]))){
+          parse.push(input[i]);
         }
-        else if(input[i].match(numberCheck) !== null && parse.length === 1){
+        else if((input[i].match(numberCheck) !== null || input[i] === ".") && parse.length === 1){
             parse[0] += input[i];
         }
         else if(input[i].match(numberCheck) !== null && parse.length === 3){
@@ -77,10 +78,15 @@ function calculate(e){
             parse.push(input[i])
         }
     }
-    console.log(parse)
+
+    if(parse.length === 4){
+        parse[2] = parse[3];
+        parse.pop;
+        parse[1] = "+";
+    }
     
-    if(parse.length === 4 || parse[1] === "+"){
-        total = parseInt(parse[0]) + parseInt(parse[3]);
+    if(parse[1] === "+"){
+        total = parseInt(parse[0]) + parseInt(parse[2]);
     }
     else if(parse[1] === "*"){
         total = parseInt(parse[0]) * parseInt(parse[2]);
@@ -91,8 +97,14 @@ function calculate(e){
     else if(parse[1] === "-"){
         total = parseInt(parse[0]) - parseInt(parse[2])
     }
-
+    console.log(total)
     answer.textContent = total;
+    console.log(answer.textContent)
+    if(answer.textContent === "0"){
+        operation.textContent = "";
+    }
+    else{operation.textContent = total;
+    }
 }
 
 equals.onclick = calculate;
