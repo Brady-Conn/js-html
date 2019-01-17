@@ -88,6 +88,9 @@ divide.onclick = addToDisplay;
 dot.onclick = addToDisplay;
 
 function calculate(e){
+    if(operation.textContent === ''){
+        return;
+    }
     for(let i = 0; i < parse.length; i++){
         if(parse[i] === '*'){
             parse.splice((i-1), 3, (parseFloat(parse[i-1])*parseFloat(parse[i+1])))
