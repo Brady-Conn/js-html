@@ -14,6 +14,7 @@ const divide = document.getElementById("/");
 const multiply = document.getElementById("*");
 const equals = document.getElementById("=")
 const clear = document.getElementById("clear");
+const dot = document.getElementById('dot')
 let display = document.getElementById("display");
 let operation = document.getElementById("operation")
 let answer = document.getElementById("answer")
@@ -23,6 +24,7 @@ let operators = ['+', '-', '*', '/'];
 
 function addToDisplay(e){
     let selection = e.target.textContent;
+    let dotcheck = /\./;
     if(operation.textContent === '' && operators.includes(selection)){
         operation.textContent = answer.textContent + selection;
         parse.push(answer.textContent);
@@ -34,8 +36,14 @@ function addToDisplay(e){
         parse.push(selection);
         console.log("2")
     }
-    else if(operators.includes(parse[parse.length -1]) && operators.includes(selection)){
+    else if((operators.includes(parse[parse.length -1]) && operators.includes(selection)) || (dotcheck.test(parse[parse.length-1]) && selection === '.')){
+        console.log("exit")
         return;
+    }
+    else if(selection === '.' && (operators.includes(parse[parse.length-1]) || operation.textContent === '')){
+        console.log(parse)
+        operation.textContent += '0' + selection;
+        parse.push('0' + selection);
     }
     else if((operators.includes(parse[parse.length-1]) && parse[parse.length-1] !== '-') || operation.textContent === ''){
         operation.textContent += selection;
@@ -53,6 +61,7 @@ function addToDisplay(e){
         console.log('5')
     }
     console.log(parse)
+    console.log(parse.includes('.', parse.length-1))
 }
 
 function clearAll(e){
@@ -76,10 +85,35 @@ add.onclick = addToDisplay;
 subtract.onclick = addToDisplay;
 multiply.onclick = addToDisplay;
 divide.onclick = addToDisplay;
+dot.onclick = addToDisplay;
 
 function calculate(e){
-
+    for(let i = 0; i < parse.length; i++){
+        if(parse[i] === '*'){
+            parse.splice((i-1), 3, (parseFloat(parse[i-1])*parseFloat(parse[i+1])))
+        }
+        console.log(parse)
+    }
+    for(let i = 0; i < parse.length; i++){
+        if(parse[i] === '/'){
+            parse.splice((i-1), 3, (parseFloat(parse[i-1])/parseFloat(parse[i+1])))
+        }
+    }
+    for(let i = 0; i < parse.length; i++){
+        if(parse[i] === '+'){
+            parse.splice((i-1), 3, (parseFloat(parse[i-1])+parseFloat(parse[i+1])))
+        }
+        console.log(parse)
+    }
+    for(let i = 0; i < parse.length; i++){
+        if(parse[i] === '-'){
+            parse.splice((i-1), 3, (parseFloat(parse[i-1])-parseFloat(parse[i+1])))
+        }
+    }
+    answer.textContent = parse[0];
+    operation.textContent = '';
+    parse = [];
 }
 
-
+equals.onclick = calculate;
 clear.onclick = clearAll;
