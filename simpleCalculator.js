@@ -45,12 +45,12 @@ function addToDisplay(e){
         operation.textContent += '0' + selection;
         parse.push('0' + selection);
     }
-    else if((operators.includes(parse[parse.length-1]) && parse[parse.length-1] !== '-') || operation.textContent === ''){
+    else if((operators.includes(parse[parse.length-1]) && parse[parse.length-2] !== '-') || operation.textContent === ''){
         operation.textContent += selection;
         parse.push(selection);
         console.log('3')
     }
-    else if(operators.includes(selection) === false || parse[parse-1] === '-'){
+    else if(operators.includes(selection) === false || parse[parse.length-1] === '-'){
         operation.textContent += selection;
         parse[parse.length-1] += selection;
         console.log('4')
@@ -61,7 +61,7 @@ function addToDisplay(e){
         console.log('5')
     }
     console.log(parse)
-    console.log(parse.includes('.', parse.length-1))
+    console.log(operators.includes(selection))
 }
 
 function clearAll(e){
@@ -69,23 +69,6 @@ function clearAll(e){
     operation.textContent = "";
     parse = [];
 }
-
-
-one.onclick = addToDisplay;
-two.onclick = addToDisplay;
-three.onclick = addToDisplay;
-four.onclick = addToDisplay;
-five.onclick = addToDisplay;
-six.onclick = addToDisplay;
-seven.onclick = addToDisplay;
-eight.onclick = addToDisplay;
-nine.onclick = addToDisplay;
-zero.onclick = addToDisplay;
-add.onclick = addToDisplay;
-subtract.onclick = addToDisplay;
-multiply.onclick = addToDisplay;
-divide.onclick = addToDisplay;
-dot.onclick = addToDisplay;
 
 function calculate(e){
     if(operation.textContent === ''){
@@ -118,5 +101,20 @@ function calculate(e){
     parse = [];
 }
 
+one.onclick = addToDisplay;
+two.onclick = addToDisplay;
+three.onclick = addToDisplay;
+four.onclick = addToDisplay;
+five.onclick = addToDisplay;
+six.onclick = addToDisplay;
+seven.onclick = addToDisplay;
+eight.onclick = addToDisplay;
+nine.onclick = addToDisplay;
+zero.onclick = addToDisplay;
+add.onclick = addToDisplay;
+subtract.onclick = addToDisplay;
+multiply.onclick = addToDisplay;
+divide.onclick = addToDisplay;
+dot.onclick = addToDisplay;
 equals.onclick = calculate;
 clear.onclick = clearAll;
