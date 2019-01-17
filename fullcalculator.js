@@ -1,4 +1,3 @@
-
 const getElementAndAddClickListener = (id, func) => {
     const element = document.getElementById(id);
     element.onclick = func;
@@ -13,9 +12,9 @@ const initialState = {
     value: 0,
 };
 
-const operators = ['+', '-', '/', '*'];
+const operators = ['*', '/', '+', '-'];
 
-const state = { ...initialState};
+const state = { ...initialState };
 
 const setDisplay = (text = '') => { display.textContent = text };
 
@@ -31,23 +30,41 @@ const updateState = newState => {
     renderNewState();
 };
 
+const cannotAdd = operation => {
+    const { operations } = state;
+    const isEmpty = operations.length === 0;
+    const hasOperatorLast = operators.includes(operations[operations.length - 1]);
+    const operationIsOperator = operators.includes(operation);
+    return (hasOperatorLast && operationIsOperator) || (operationIsOperator && isEmpty);
+}
+
+const cannotCalculate = () => {
+    const { operations } = state;
+    const isEmpty = operations.length === 0;
+    const hasOperatorLast = operators.includes(operations[operations.length - 1]);  
+    return isEmpty || hasOperatorLast;
+}
+
 const addOperation = ({ target: { textContent: operation } }) => {
     const { operations } = state;
-    if(operations.length === 0) return;
-    if(operators.includes(operations[operations.length - 1]) && operators.includes(operation)) return;
+    if(cannotAdd(operation)) return;
     updateState({ operations: [...operations, operation] });
 };
 
-const clearDisplay = () => {
-    updateState(initialState);
-    setDisplay();
-};
+const clearDisplay = () => updateState(initialState);
 
 const calculate = () => {
+    if(cannotCalculate()) return;
     const { operations } = state;
-    state.value = eval(operations.join(''));
-    renderNewState();
+    const sum = eval(operations.join(''))
+    updateState({ value: sum, operations: [sum] })
 };
+
+const getPartsFromPivot = (full, pivot) => {
+    const index = full.indexOf(pivot);
+    if (index < 0) return full;
+    return { partA: full.slice(0, index), partB: full.slice(index+1) }
+}
 
 const one = getElementAndAddClickListener('1', addOperation);
 const two = getElementAndAddClickListener('2', addOperation);
