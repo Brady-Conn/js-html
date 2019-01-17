@@ -45,7 +45,7 @@ function addToDisplay(e){
         operation.textContent += '0' + selection;
         parse.push('0' + selection);
     }
-    else if((operators.includes(parse[parse.length-1]) && parse[parse.length-2] !== '-') || operation.textContent === ''){
+    else if((operators.includes(parse[parse.length-1]) && operators.includes(parse[parse.length-2]) === false)|| operation.textContent === ''){
         operation.textContent += selection;
         parse.push(selection);
         console.log('3')
@@ -71,6 +71,7 @@ function clearAll(e){
 }
 
 function calculate(e){
+    while(parse.length > 1){
     if(operation.textContent === ''){
         return;
     }
@@ -94,8 +95,10 @@ function calculate(e){
     for(let i = 0; i < parse.length; i++){
         if(parse[i] === '-'){
             parse.splice((i-1), 3, (parseFloat(parse[i-1])-parseFloat(parse[i+1])))
+            console.log(parse)
         }
     }
+}
     answer.textContent = parse[0];
     operation.textContent = '';
     parse = [];
