@@ -25,6 +25,7 @@ let operators = ['+', '-', '*', '/'];
 function addToDisplay(e){
     let selection = e.target.textContent;
     let dotcheck = /\./;
+    let endondot = /\.$/;
     if(operation.textContent === '' && operators.includes(selection)){
         operation.textContent = answer.textContent + selection;
         parse.push(answer.textContent);
@@ -55,6 +56,11 @@ function addToDisplay(e){
         parse[parse.length-1] += selection;
         console.log('4')
     }
+    else if(endondot.test(parse[parse.length-1])){
+        operation.textContent += '0' + selection;
+        parse[parse.length-1] += '0';
+        parse.push(selection);
+    }
     else{
         operation.textContent += selection;
         parse.push(selection);
@@ -72,32 +78,40 @@ function clearAll(e){
 
 function calculate(e){
     while(parse.length > 1){
-    if(operation.textContent === ''){
-        return;
-    }
-    for(let i = 0; i < parse.length; i++){
-        if(parse[i] === '*'){
-            parse.splice((i-1), 3, (parseFloat(parse[i-1])*parseFloat(parse[i+1])))
+        if(operation.textContent === ''){
+            return;
         }
-        console.log(parse)
-    }
-    for(let i = 0; i < parse.length; i++){
-        if(parse[i] === '/'){
-            parse.splice((i-1), 3, (parseFloat(parse[i-1])/parseFloat(parse[i+1])))
+        if(parse.includes('*')){
+            for(let i = 0; i < parse.length; i++){
+                if(parse[i] === '*'){
+                    parse.splice((i-1), 3, (parseFloat(parse[i-1])*parseFloat(parse[i+1])))
+                }
+                console.log(parse)
+            }
         }
-    }
-    for(let i = 0; i < parse.length; i++){
-        if(parse[i] === '+'){
-            parse.splice((i-1), 3, (parseFloat(parse[i-1])+parseFloat(parse[i+1])))
+        if(parse.includes('/')){
+            for(let i = 0; i < parse.length; i++){
+                if(parse[i] === '/'){
+                    parse.splice((i-1), 3, (parseFloat(parse[i-1])/parseFloat(parse[i+1])))
+                }
+            }
         }
-        console.log(parse)
-    }
-    for(let i = 0; i < parse.length; i++){
-        if(parse[i] === '-'){
-            parse.splice((i-1), 3, (parseFloat(parse[i-1])-parseFloat(parse[i+1])))
-            console.log(parse)
+        if(parse.includes('+')){
+            for(let i = 0; i < parse.length; i++){
+                if(parse[i] === '+'){
+                    parse.splice((i-1), 3, (parseFloat(parse[i-1])+parseFloat(parse[i+1])))
+                }
+                console.log(parse)
+            }
         }
-    }
+        if(parse.includes('-')){
+            for(let i = 0; i < parse.length; i++){
+                if(parse[i] === '-'){
+                    parse.splice((i-1), 3, (parseFloat(parse[i-1])-parseFloat(parse[i+1])))
+                    console.log(parse)
+                }
+            }
+        }
 }
     answer.textContent = parse[0];
     operation.textContent = '';
